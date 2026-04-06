@@ -7,13 +7,14 @@ import { db, auth, googleProvider } from './firebase';
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 
-function FadeIn({ children, delay = 0, yOffset = 40 }: { children: React.ReactNode; delay?: number; yOffset?: number }) {
+function FadeIn({ children, delay = 0, yOffset = 40, className = "" }: { children: React.ReactNode; delay?: number; yOffset?: number; className?: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 1, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={className}
     >
       {children}
     </motion.div>
@@ -268,7 +269,7 @@ export default function App() {
             animate={{ opacity: 1, scale: 1.05 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             style={{ y }}
-            src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1974&auto=format&fit=crop" 
+            src="/main-photo.JPG" 
             alt="Young Couple" 
             className="w-full h-full object-cover origin-top"
             referrerPolicy="no-referrer"
@@ -300,8 +301,8 @@ export default function App() {
         </div>
       </section>
 
-      <FadeIn yOffset={20}>
-        <img src="/ornament-horizontal.png" className="w-full h-auto block opacity-90" alt="" />
+      <FadeIn yOffset={20} className="-mb-12 md:-mb-20 relative z-10">
+        <img src="/footer-ornament.png" className="w-full h-auto block opacity-90" alt="" />
       </FadeIn>
 
       {/* Welcome Section (Red Background) */}
@@ -342,8 +343,8 @@ export default function App() {
         </div>
       </section>
 
-      <FadeIn yOffset={20}>
-        <img src="/ornament-horizontal.png" className="w-full h-auto block opacity-90" alt="" />
+      <FadeIn yOffset={20} className="-mt-12 md:-mt-20 relative z-10">
+        <img src="/footer-ornament.png" className="w-full h-auto block opacity-90" alt="" />
       </FadeIn>
 
       {/* Program Section */}
@@ -380,8 +381,8 @@ export default function App() {
         </div>
       </section>
 
-      <FadeIn yOffset={20}>
-        <img src="/ornament-horizontal.png" className="w-full h-auto block opacity-90" alt="" />
+      <FadeIn yOffset={20} className="-mb-12 md:-mb-20 relative z-10">
+        <img src="/footer-ornament.png" className="w-full h-auto block opacity-90" alt="" />
       </FadeIn>
 
       {/* Dress Code Section */}
@@ -400,14 +401,12 @@ export default function App() {
           <FadeIn delay={0.4}>
             {/* Image Collage (Moved here) */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-16">
-              <img src="https://picsum.photos/seed/slavic1/600/800" alt="Ref 1" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="https://picsum.photos/seed/slavic2/600/800" alt="Ref 2" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="https://picsum.photos/seed/slavic3/600/800" alt="Ref 3" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="https://picsum.photos/seed/slavic4/600/800" alt="Ref 4" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <div className="flex items-center justify-center p-8 border-2 border-white/20 text-center bg-white/5 rounded-sm">
-                <p className="slavic-text text-xl text-white leading-tight">Не забывай свои корни</p>
-              </div>
-              <img src="https://picsum.photos/seed/slavic5/600/800" alt="Ref 5" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress1.jpeg" alt="Ref 1" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress2.jpeg" alt="Ref 2" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress3.jpeg" alt="Ref 3" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress4.jpeg" alt="Ref 4" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress5.jpeg" alt="Ref 5" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress6.jpeg" alt="Ref 6" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
             </div>
           </FadeIn>
             
@@ -433,8 +432,8 @@ export default function App() {
         </div>
       </section>
 
-      <FadeIn yOffset={20}>
-        <img src="/ornament-horizontal.png" className="w-full h-auto block opacity-90" alt="" />
+      <FadeIn yOffset={20} className="-mt-12 md:-mt-20 relative z-10">
+        <img src="/footer-ornament.png" className="w-full h-auto block opacity-90" alt="" />
       </FadeIn>
 
       {/* RSVP Section */}
