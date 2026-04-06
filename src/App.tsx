@@ -330,7 +330,7 @@ export default function App() {
               </p>
               <p className="text-sm opacity-80 uppercase tracking-widest">с.Карагали, Кизанская улица, 8</p>
               <a 
-                href="https://yandex.ru/maps/-/CDT6Z8-J" 
+                href="https://go.2gis.com/r2nI7" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 mt-6 px-6 py-3 border border-white/30 hover:bg-white hover:text-folk-red transition-all duration-300 uppercase text-xs tracking-widest"
@@ -401,12 +401,12 @@ export default function App() {
           <FadeIn delay={0.4}>
             {/* Image Collage (Moved here) */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-16">
-              <img src="/dress1.jpeg" alt="Ref 1" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="/dress2.jpeg" alt="Ref 2" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="/dress3.jpeg" alt="Ref 3" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="/dress4.jpeg" alt="Ref 4" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="/dress5.jpeg" alt="Ref 5" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
-              <img src="/dress6.jpeg" alt="Ref 6" className="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress1.jpeg" alt="Ref 1" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress2.jpeg" alt="Ref 2" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress3.jpeg" alt="Ref 3" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress4.jpeg" alt="Ref 4" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress5.jpeg" alt="Ref 5" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
+              <img src="/dress6.jpeg" alt="Ref 6" className="w-full h-auto object-cover rounded-sm" referrerPolicy="no-referrer" />
             </div>
           </FadeIn>
             
