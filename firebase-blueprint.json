@@ -1,0 +1,41 @@
+{
+  "entities": {
+    "Guest": {
+      "title": "Guest",
+      "description": "A guest who has responded to the wedding invitation.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the guest."
+        },
+        "attendance": {
+          "type": "string",
+          "enum": ["alone", "with_partner", "no"],
+          "description": "Whether the guest will attend."
+        },
+        "partnerName": {
+          "type": "string",
+          "description": "Name of the partner if attending with one."
+        },
+        "drinks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Selected drink preferences."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time the response was submitted."
+        }
+      },
+      "required": ["name", "attendance", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/guests/{guestId}": {
+      "schema": "Guest",
+      "description": "Collection of guest responses."
+    }
+  }
+}

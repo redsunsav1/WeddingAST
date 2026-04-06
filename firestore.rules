@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: guests
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required) - Guest's full name
+    //   - attendance: string (required, enum: ['yes', 'no']) - Attendance status
+    //   - createdAt: timestamp (required) - Submission time
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (request.auth.token.email == "redsunsavi@bk.ru" && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidGuest(data) {
+      return data.keys().hasAll(['name', 'attendance', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.attendance in ['alone', 'with_partner', 'no'] &&
+             (!('partnerName' in data) || data.partnerName == null || (data.partnerName is string && data.partnerName.size() < 100)) &&
+             (!('drinks' in data) || data.drinks is list) &&
+             data.createdAt is timestamp;
+    }
+
+    match /guests/{guestId} {
+      allow read: if isAdmin();
+      allow create: if isValidGuest(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if isAdmin();
+    }
+  }
+}

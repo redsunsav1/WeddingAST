@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Ruslan+Display&family=Montserrat:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-folk: "Ruslan Display", cursive;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-folk-red: #A50000;
+  --color-folk-dark: #1A1A1A;
+  --color-folk-cream: #FFFFFF;
+}
+
+body {
+  background-color: var(--color-folk-cream);
+  color: var(--color-folk-dark);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-folk);
+  text-transform: uppercase;
+}
+
+.slavic-text {
+  font-family: var(--font-folk);
+  text-transform: uppercase;
+}
