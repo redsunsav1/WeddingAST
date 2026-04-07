@@ -25,7 +25,11 @@ export default function App() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const [isAdminView, setIsAdminView] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [adminUser, setAdminUser] = useState("");
+  const [adminPass, setAdminPass] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [guests, setGuests] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -86,19 +90,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser?.email === 'redsunsavi@bk.ru') {
-        // Admin user logged in
-      } else {
-        setIsAdminView(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (isAdminView && user?.email === 'redsunsavi@bk.ru') {
+    if (isAdminView && isAdminAuthenticated) {
       const q = query(collection(db, 'guests'), orderBy('createdAt', 'desc'));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const guestData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -108,7 +100,7 @@ export default function App() {
       });
       return () => unsubscribe();
     }
-  }, [isAdminView, user]);
+  }, [isAdminView, isAdminAuthenticated]);
 
   const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
   const attendanceValue = watch("attendance");
@@ -133,16 +125,21 @@ export default function App() {
     }
   };
 
-  const handleLogin = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error("Login failed:", error);
+  const handleAdminLogin = () => {
+    if (adminUser === 'admin' && adminPass === 'maxandeliz1') {
+      setIsAdminAuthenticated(true);
+      setIsAdminView(true);
+      setShowLoginModal(false);
+      setLoginError("");
+      setAdminUser("");
+      setAdminPass("");
+    } else {
+      setLoginError("Неверный логин или пароль");
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    setIsAdminAuthenticated(false);
     setIsAdminView(false);
   };
 
@@ -156,7 +153,7 @@ export default function App() {
     }
   };
 
-  if (isAdminView && user?.email === 'redsunsavi@bk.ru') {
+  if (isAdminView && isAdminAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 font-sans">
         <div className="max-w-4xl mx-auto">
@@ -261,7 +258,7 @@ export default function App() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-start overflow-hidden px-4">
+      <section className="relative min-h-screen flex flex-col items-center justify-start overflow-hidden px-0">
         {/* Hero Image with Fade */}
         <div className="w-full h-[60vh] md:h-[70vh] relative overflow-hidden">
           <motion.img 
@@ -277,7 +274,7 @@ export default function App() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white"></div>
         </div>
 
-        <div className="text-center z-10 -mt-20 md:-mt-32 relative">
+        <div className="text-center z-10 -mt-20 md:-mt-32 relative px-4">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -363,10 +360,10 @@ export default function App() {
             
           <div className="space-y-16">
             {[
-              { time: "15:30", title: "Велком" },
-              { time: "16:00", title: "Регистрация" },
-              { time: "17:00", title: "Банкет" },
-              { time: "23:00", title: "Финал" }
+              { time: "17:00", title: "Встреча гостей" },
+              { time: "17:30", title: "Торжественная церемония" },
+              { time: "18:00", title: "Пир на весь мир" },
+              { time: "00:00", title: "Финал" }
             ].map((item, index) => (
               <div key={index}>
                 <FadeIn delay={index * 0.15}>
@@ -413,7 +410,7 @@ export default function App() {
           <FadeIn delay={0.6}>
             {/* Color Palette (Single row, compact) */}
             <div className="flex justify-center items-center gap-3 md:gap-4 mb-16 overflow-x-auto pb-4 no-scrollbar">
-              {['#FFFFFF', '#F5E6D3', '#D2B48C', '#B8860B', '#8B0000'].map((color, i) => (
+              {['#D2B48C', '#B8860B', '#8B0000', '#000000'].map((color, i) => (
                 <div 
                   key={i}
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full border-[3px] border-white shadow-xl shrink-0"
@@ -532,30 +529,87 @@ export default function App() {
         
         {/* Admin Login Button */}
         <div className="mt-8">
-          {!user ? (
+          {!isAdminAuthenticated ? (
             <button 
-              onClick={handleLogin}
+              onClick={() => setShowLoginModal(true)}
               className="text-[10px] uppercase tracking-widest opacity-20 hover:opacity-100 transition-opacity flex items-center gap-1 mx-auto"
             >
               <LogIn size={10} /> Вход для администратора
             </button>
-          ) : user.email === 'redsunsavi@bk.ru' ? (
-            <button 
-              onClick={() => setIsAdminView(true)}
-              className="text-[10px] uppercase tracking-widest text-folk-red font-bold hover:underline transition-all"
-            >
-              Перейти в админку
-            </button>
           ) : (
-            <button 
-              onClick={handleLogout}
-              className="text-[10px] uppercase tracking-widest opacity-20 hover:opacity-100 transition-opacity"
-            >
-              Выйти ({user.email})
-            </button>
+            <div className="flex flex-col items-center gap-2">
+              <button 
+                onClick={() => setIsAdminView(true)}
+                className="text-[10px] uppercase tracking-widest text-folk-red font-bold hover:underline transition-all"
+              >
+                Перейти в админку
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="text-[10px] uppercase tracking-widest opacity-20 hover:opacity-100 transition-opacity"
+              >
+                Выйти
+              </button>
+            </div>
           )}
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white p-8 rounded-lg max-w-sm w-full relative shadow-2xl"
+            >
+              <button 
+                onClick={() => setShowLoginModal(false)} 
+                className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
+              >
+                <XCircle size={24} />
+              </button>
+              <h3 className="text-2xl slavic-text text-folk-red mb-6 text-center">Вход в админку</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-1">Логин</label>
+                  <input 
+                    type="text" 
+                    value={adminUser}
+                    onChange={e => setAdminUser(e.target.value)}
+                    className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-folk-red transition-colors"
+                    onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-1">Пароль</label>
+                  <input 
+                    type="password" 
+                    value={adminPass}
+                    onChange={e => setAdminPass(e.target.value)}
+                    className="w-full border-b border-gray-300 py-2 focus:outline-none focus:border-folk-red transition-colors"
+                    onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
+                  />
+                </div>
+                {loginError && <p className="text-red-500 text-xs text-center">{loginError}</p>}
+                <button 
+                  onClick={handleAdminLogin}
+                  className="w-full bg-folk-red text-white py-3 mt-4 hover:bg-folk-dark transition-colors uppercase tracking-widest text-sm"
+                >
+                  Войти
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Floating Audio Button */}
       <button 
