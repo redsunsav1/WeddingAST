@@ -175,12 +175,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="w-full text-left">
+          <div className="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-200">
+            <table className="w-full text-left whitespace-nowrap">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Имя</th>
-                  <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Пара</th>
+                  <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Гость</th>
                   <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Присутствие</th>
                   <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Напитки</th>
                   <th className="px-6 py-4 text-xs uppercase tracking-widest font-medium text-gray-500">Дата</th>
@@ -190,33 +189,52 @@ export default function App() {
               <tbody className="divide-y divide-gray-200">
                 {guests.map((guest) => (
                   <tr key={guest.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-900 font-medium">{guest.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{guest.partnerName || '-'}</td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">{guest.name}</div>
+                      {guest.partnerName && (
+                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                          <span className="text-folk-red">+</span> {guest.partnerName}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-6 py-4">
                       {guest.attendance === 'alone' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200">
                           <CheckCircle size={12} /> Один(а)
                         </span>
                       ) : guest.attendance === 'with_partner' ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                           <CheckCircle size={12} /> С парой
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-200">
                           <XCircle size={12} /> Не сможет
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {guest.drinks ? (Array.isArray(guest.drinks) ? guest.drinks.join(', ') : guest.drinks) : '-'}
+                    <td className="px-6 py-4">
+                      {guest.attendance !== 'no' && guest.drinks && guest.drinks.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 max-w-[250px] whitespace-normal">
+                          {(Array.isArray(guest.drinks) ? guest.drinks : [guest.drinks]).map((drink: string, i: number) => (
+                            <span key={i} className="inline-flex px-2 py-1 bg-gray-100 text-gray-700 text-[10px] uppercase tracking-wider rounded border border-gray-200">
+                              {drink}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
-                      {guest.createdAt?.toDate().toLocaleString('ru-RU')}
+                      {guest.createdAt?.toDate().toLocaleString('ru-RU', {
+                        day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit'
+                      })}
                     </td>
                     <td className="px-6 py-4">
                       <button 
                         onClick={() => handleDeleteGuest(guest.id)}
-                        className="text-gray-400 hover:text-red-600 transition-colors"
+                        className="text-gray-400 hover:text-red-600 transition-colors p-1.5 rounded hover:bg-red-50"
+                        title="Удалить анкету"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -225,7 +243,7 @@ export default function App() {
                 ))}
                 {guests.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500 italic">
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500 italic">
                       Ответов пока нет
                     </td>
                   </tr>
@@ -234,14 +252,26 @@ export default function App() {
             </table>
           </div>
           
-          <div className="mt-8 grid grid-cols-2 gap-4">
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Всего ответов</p>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Всего анкет</p>
               <p className="text-3xl font-bold text-folk-red">{guests.length}</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Придут</p>
-              <p className="text-3xl font-bold text-green-600">{guests.filter(g => g.attendance === 'alone' || g.attendance === 'with_partner').length}</p>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Точно придут (чел.)</p>
+              <p className="text-3xl font-bold text-green-600">
+                {guests.reduce((acc, g) => {
+                  if (g.attendance === 'alone') return acc + 1;
+                  if (g.attendance === 'with_partner') return acc + 2;
+                  return acc;
+                }, 0)}
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Отказы</p>
+              <p className="text-3xl font-bold text-red-500">
+                {guests.filter(g => g.attendance === 'no').length}
+              </p>
             </div>
           </div>
         </div>
