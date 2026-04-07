@@ -468,7 +468,7 @@ export default function App() {
         <div className="max-w-xl mx-auto text-center relative z-10">
           <FadeIn>
             <h2 className="text-4xl md:text-5xl mb-8 text-folk-red">Анкета гостя</h2>
-            <p className="text-sm uppercase tracking-widest mb-12">Пожалуйста подтвердите своё присутствие до 20 августа</p>
+            <p className="text-sm uppercase tracking-widest mb-12">Пожалуйста подтвердите своё присутствие до 20 апреля</p>
           </FadeIn>
             
           <FadeIn delay={0.2}>
